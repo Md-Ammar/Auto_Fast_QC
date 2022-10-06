@@ -24,7 +24,7 @@ secondary = pd.read_csv(sec, sep='|', skiprows=1, parse_dates=[["Start Date", 'S
 #     quit()
 
 if primary.shape[0] == secondary.shape[0]:
-    print(f"{primary.shape} is the shape of both datas")
+    print(f"\n {primary.shape} is the shape of both datas(Data Shape equal ...proceeding...)")
 else:
     print(f"Data shape of \n Primary = {primary.shape} \n Secondary = {secondary.shape}")
     primary_resource_name = list(primary['Resource Name'])
@@ -75,6 +75,5 @@ print("Score = -", error)
 final_data = pd.DataFrame(final_data)
 file_name = f"Output({str(datetime.datetime.now().strftime('%d_%m_%y %H_%M_%S'))}).csv"
 final_data.to_csv(file_name)
-print(f"Output file generated {file_name}")
-
-input("Press enter to exit.")
+print(f"\nOutput file generated {file_name}")
+input("\nPress enter to exit.")
