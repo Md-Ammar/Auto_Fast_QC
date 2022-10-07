@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import datetime
 
-os.system("Color 0a & ascii-art AutoFastQC.ico --height 50 --width 100")
+# os.system("Color 0a & ascii-art AutoFastQC.ico --height 50 --width 100")
 
 print(">>Welcome to IK Cohort Auto QC.\n",
       "This software should be used to check cohorts automatically\n",
@@ -16,9 +16,36 @@ try:
 except:
     input("There was a problem reading the file")
 
+# dtypes = {"Sd": ["Start Date"],
+#           "Ed": ["End Date"],
+#           "St": ["Start Time"],
+#           "Et": ["End Time"]}
+
 # try:
-primary = pd.read_csv(prim, skiprows=3, parse_dates=[["Start Date", 'Start Time'], ['End Date', 'End Time']], keep_default_na='')
-secondary = pd.read_csv(sec, sep='|', skiprows=1, parse_dates=[["Start Date", 'Start Time'], ['End Date', 'End Time']], keep_default_na='')
+primary = pd.read_csv(prim, skiprows=3, parse_dates=[["Start Date", "Start Time"],[ "End Date", "End Time"]], keep_default_na='',)
+secondary = pd.read_csv(sec, sep='|', skiprows=1, parse_dates=[["Start Date", "Start Time"], ["End Date", "End Time"]], keep_default_na='',)
+
+# for _ in ["Start Date", "Start Time", "End Date", "End Time"]:
+#     primary[_].fillna(" ")
+#     secondary[_].fillna(" ")
+
+# primary["Start Date"] = pd.to_datetime(primary["Start Date"])
+# primary["Start Time"] = pd.to_datetime(primary["Start Time"])
+#
+# primary["End Date"] = pd.to_datetime(primary["End Date"])
+# primary["End Time"] = pd.to_datetime(primary["End Time"])
+#
+# secondary["Start Date"] = pd.to_datetime(secondary["Start Date"])
+# secondary["Start Time"] = pd.to_datetime(secondary["Start Time"])
+#
+# secondary["End Date"] = pd.to_datetime(secondary["End Date"])
+# secondary["End Time"] = pd.to_datetime(secondary["End Time"])
+
+# print(primary["End Time"].fillna(0))
+#
+# quit()
+
+
 # except:
 #     input("There was a problem processing the files.")
 #     quit()
@@ -50,12 +77,31 @@ for i in range(len(primary)):
     error_in_this_data_row = 0
     for header in headers:
         final_data[header].append(primary[header][i])
-        if (primary[header][i]) != (secondary[header][i]):
+
+        if primary[header][i] == secondary[header][i]:
+            final_data[header].append('')
+        else:
+            if header in ["Start Date_Start Time", "End Date_End Time"] and \
+                    type(primary[header][i]) != str and \
+                    type(secondary[header][i]) != str:
+                if primary[header][i].date() == secondary[header][i].date():
+                    pass
+                else:
+                    print("Date mismatch")
+                    error += 1
+                    error_in_this_data_row += 1
+                if primary[header][i].time() == secondary[header][i].time():
+                    pass
+                else:
+                    print("Time mismatch")
+                    error += 1
+                    error_in_this_data_row += 1
+                final_data[header].append(str(secondary[header][i]) + "(Missing/Wrong value)")
+                final_data[header].append('')
+                continue
             final_data[header].append(str(secondary[header][i]) + "(Missing/Wrong value)")
             error += 1
             error_in_this_data_row += 1
-        else:
-            final_data[header].append('')
         final_data[header].append('')
     for item in ['Source', 'Uplevel', '']:
         final_data['Origin'].append(item)
