@@ -1,8 +1,9 @@
 import pandas as pd
 import os
 import datetime
+import pyfiglet
 
-os.system('Color 0a')# & ascii-art AutoFastQC.ico --height 25 --width 75')
+result = pyfiglet.print_figlet("Auto Fast QC")
 
 print(">>Welcome to IK Cohort Auto QC.\n",
       "This software should be used to check cohorts automatically\n",
@@ -24,8 +25,7 @@ try:
     secondary = pd.read_csv(sec, sep='|', skiprows=1,
                             parse_dates=[["Start Date", "Start Time"], ["End Date", "End Time"]], keep_default_na='')
 except Exception as e:
-    print(e)
-    input("There was a problem processing the files.")
+    input(f"{e}\nThere was a problem processing the files.")
     quit()
 
 
@@ -61,8 +61,7 @@ try:
     headers.remove('Topic Code')
     headers.remove('Status')
 except Exception as e:
-    print(e)
-    input("Data header name does not have Topic Code &/or Status column to be dropped...please try again")
+    input(f"{e}\nData header name does not have Topic Code &/or Status column to be dropped...please try again")
     quit()
 
 final_data = {'Origin': [], 'No of error': []}
@@ -114,8 +113,7 @@ try:
         final_data['No of error'].append('')
         error_freq_list.append(error_in_this_data_row)
 except Exception as e:
-    print(e)
-    input("There was a problem in generating the score")
+    input(f"{e}\nThere was a problem in generating the score")
     quit()
 
 print('Error frequency list', error_freq_list)
