@@ -3,7 +3,8 @@ import os
 import datetime
 import pyfiglet
 
-result = pyfiglet.print_figlet("Auto Fast QC")
+result = pyfiglet.figlet_format("Auto Fast QC", )
+print(result)
 
 print(">>Welcome to IK Cohort Auto QC.\n",
       "This software should be used to check cohorts automatically\n",
@@ -32,8 +33,6 @@ except Exception as e:
 def checker(prim, sec, error, error_in_this_data_row):
     prim_list = prim.strip(";").split(";")
     sec_list = sec.strip(";").split(';')
-
-    missing = 0
 
     for item in prim_list:
         if item not in sec_list:
@@ -116,9 +115,7 @@ except Exception as e:
     input(f"{e}\nThere was a problem in generating the score")
     quit()
 
-print('Error frequency list', error_freq_list)
-print("Total No of Errors = -", error)
-print("Score = -", error)
+print("\n\nScore = -", error)
 
 final_data = pd.DataFrame(final_data)
 file_name = f"Output({str(datetime.datetime.now().strftime('%d_%m_%y %H_%M_%S'))}).csv"
